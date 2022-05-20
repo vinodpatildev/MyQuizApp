@@ -11,9 +11,9 @@ object Constants {
             R.drawable.ic_flag_of_argentina,
             "India",
             "UAE",
-            "argentina",
+            "Argentina",
             "Canada",
-        2,
+        3,
         )
         questionList.add(que1)
 
@@ -23,9 +23,9 @@ object Constants {
             R.drawable.ic_flag_of_australia,
             "Australia",
             "UAE",
-            "argentina",
+            "Belarus",
             "Canada",
-            0,
+            1,
         )
         questionList.add(que2)
 
@@ -35,9 +35,9 @@ object Constants {
             R.drawable.ic_flag_of_belgium,
             "India",
             "Katar",
-            "argentina",
+            "Argentina",
             "Belgium",
-            3,
+            4,
         )
         questionList.add(que3)
 
@@ -49,7 +49,7 @@ object Constants {
             "Fiji",
             "Brazil",
             "Canada",
-            2,
+            3,
         )
         questionList.add(que4)
 
@@ -61,7 +61,7 @@ object Constants {
             "Denmark",
             "Argentina",
             "Japan",
-            1,
+            2,
         )
         questionList.add(que5)
 
@@ -72,8 +72,8 @@ object Constants {
             "USA",
             "UAE",
             "Canada",
-            "fiji",
-            3,
+            "Fiji",
+            4,
         )
         questionList.add(que6)
 
@@ -85,7 +85,7 @@ object Constants {
             "Inda",
             "Japan",
             "Republic of Kongo",
-            0,
+            1,
         )
         questionList.add(que7)
 
@@ -97,7 +97,7 @@ object Constants {
             "Pakistan",
             "China",
             "Nepal",
-            0,
+            1,
         )
         questionList.add(que8)
 
@@ -121,7 +121,7 @@ object Constants {
             "UAE",
             "Australia",
             "New Zealand",
-            2,
+            3,
         )
         questionList.add(que10)
 
