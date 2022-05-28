@@ -9,8 +9,15 @@ import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.core.content.ContextCompat
+import com.android.volley.Request
+import com.android.volley.RequestQueue
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
+import org.json.JSONArray
+import org.json.JSONObject
 
 class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
+    private var vQueue: RequestQueue? = null
     private var mCurrentPosition:Int = 1
     private var mQuestionList: ArrayList<Question>? = null
     private var mSelectedOption:Int = 0
@@ -32,6 +39,7 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_quiz_questions)
+        vQueue = Volley.newRequestQueue(this)
 
         mUserName = intent.getStringExtra(Constants.USER_NAME)
 
@@ -53,18 +61,90 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
         tvOptionFour?.setOnClickListener(this)
         btnSubmit?.setOnClickListener(this)
 
-        mQuestionList = Constants.getQuestions()
+        Log.i("Passed ","stage 1")
+        loadQuestions()
+        Log.i("Passed ","stage 2")
 
-        setQuestions()
+//        setQuestions()
+    }
+
+    private fun loadQuestions(){
+        Log.i("Passed ","loadQuestions() :initiate")
+        val questionList = ArrayList<Question>()
+
+        val url = "https://opentdb.com/api.php?amount=10&category=11&difficulty=easy&type=multiple"
+        val jsonObjectRequest = JsonObjectRequest(
+            Request.Method.GET,
+            url,
+            null,
+            { response ->
+                val jsonQuestions : JSONArray? = response.getJSONArray("results")
+
+                for(item in 0..9){
+                    val id = item + 1
+                    val questionStatement = (jsonQuestions?.get(item) as JSONObject).getString("question").toString()
+                    val correctAnswer = (jsonQuestions?.get(item) as JSONObject).getString("correct_answer").toString()
+
+                    var wans = (jsonQuestions?.get(item) as JSONObject).getString("incorrect_answers")
+                    wans = wans.substring(1,wans.length-1)
+                    var wrongAnswers = wans.split(",").toTypedArray()
+
+                    val correctOption = (1..4).random()
+
+                    when(correctOption){
+                        1 -> {questionList.add(Question(id,
+                            questionStatement,
+                            correctAnswer,
+                            wrongAnswers[0],
+                            wrongAnswers[1],
+                            wrongAnswers[2],
+                            1
+                        ))}
+                        2 -> {questionList.add(Question(id,
+                            questionStatement,
+                            wrongAnswers[0],
+                            correctAnswer,
+                            wrongAnswers[1],
+                            wrongAnswers[2],
+                            2
+                        ))}
+                        3 -> {questionList.add(Question(id,
+                            questionStatement,
+                            wrongAnswers[0],
+                            wrongAnswers[1],
+                            correctAnswer,
+                            wrongAnswers[2],
+                            3
+                        ))}
+                        4 -> {questionList.add(Question(id,
+                            questionStatement,
+                            wrongAnswers[0],
+                            wrongAnswers[1],
+                            wrongAnswers[2],
+                            correctAnswer,
+                            4
+                        ))}
+                    }
+                }
+                mQuestionList = questionList
+                setQuestions()
+            },
+            { error ->
+                Toast.makeText(this,"success stage 2",Toast.LENGTH_LONG).show()
+            }
+        )
+        vQueue?.add(jsonObjectRequest)
+        Log.i("Passed ","loadQuestions() :terminate")
     }
 
     private fun setQuestions() {
+        Log.i("Passed ","setQuestions() :initiate")
         setDefaultOptionsView()
         val que: Question = mQuestionList!![mCurrentPosition - 1]
         progressBar?.progress = mCurrentPosition
         tvProgress?.text = "$mCurrentPosition/${progressBar?.max}"
         tvQuestion?.text = que.question
-        ivImage?.setImageResource(que.image)
+//        ivImage?.setImageResource(que.image)
 
         tvOptionOne?.text = que.optionOne
         tvOptionTwo?.text = que.optionTwo
@@ -76,8 +156,10 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
         }else{
             btnSubmit?.text = "SUBMIT"
         }
+        Log.i("Passed ","setQuestions() :terminate")
     }
     fun setDefaultOptionsView(){
+        Log.i("Passed ","setDefaultOptions() :initiate")
         val options = ArrayList<TextView>()
         tvOptionOne?.let{
             options.add(0,it)
