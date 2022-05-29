@@ -1,3 +1,28 @@
 <resources>
     <string name="app_name">MyQuizApp</string>
+    <string name="selected_item">Selected Item:</string>
+    <string-array name="categories">
+        <item>General Knowledge</item> //9
+        <item>Entertainment Books</item> //10
+        <item>Entertainment : Film</item> //11
+        <item>Entertainment : Music</item> //12
+        <item>Entertainment : Musicals and Theatres</item> //13
+        <item>Entertainment : Television</item> //14
+        <item>Entertainment : Video Games</item> //15
+        <item>Entertainment : Board Games</item> //16
+        <item>Science and Nature</item> //17
+        <item>Science : Computers</item> //18
+        <item>Science : Mathematics</item> //19
+        <item>Mythology</item> //20
+        <item>Sports</item> //21
+        <item>Geography</item> //22
+        <item>History</item> //23
+        <item>Politics</item> //24
+        <item>Art</item> //25
+        <item>Celebrities</item> //26
+        <item>Animals</item> //27
+        <item>Vehicls</item> //28
+        <item>Entertainment : Comics</item> //29
+        <item>Science : Gadgets</item> // 30
+    </string-array>
 </resources>

@@ -17,6 +17,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 
 class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
+    private var mSelectedCat:Int = 9
     private var vQueue: RequestQueue? = null
     private var mCurrentPosition:Int = 1
     private var mQuestionList: ArrayList<Question>? = null
@@ -42,6 +43,7 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
         vQueue = Volley.newRequestQueue(this)
 
         mUserName = intent.getStringExtra(Constants.USER_NAME)
+        mSelectedCat = intent.getStringExtra(Constants.SELECTED_CATEGORY)?.toInt()!!
 
         progressBar = findViewById<ProgressBar>(R.id.tv_progressBar)
         tvProgress = findViewById<TextView>(R.id.tv_progress)
@@ -72,7 +74,7 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
         Log.i("Passed ","loadQuestions() :initiate")
         val questionList = ArrayList<Question>()
 
-        val url = "https://opentdb.com/api.php?amount=10&category=11&difficulty=easy&type=multiple"
+        val url = "https://opentdb.com/api.php?amount=10&category=$mSelectedCat&difficulty=easy&type=multiple"
         val jsonObjectRequest = JsonObjectRequest(
             Request.Method.GET,
             url,
@@ -137,12 +139,10 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
         vQueue?.add(jsonObjectRequest)
         Log.i("Passed ","loadQuestions() :terminate")
     }
-
     private fun filterString(str: String): String {
         return str.replace("\"","", true).replace("&quot;","\"", true).replace("&#039;","'", true).replace("&rsquo;","'", true).replace("&lsquo","'", true)
 
     }
-
     private fun setQuestions() {
         Log.i("Passed ","setQuestions() :initiate")
         setDefaultOptionsView()

@@ -56,7 +56,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_marginTop="16dp">
+                android:layout_marginTop="16dp"
+                >
 
                 <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/et_name"
@@ -68,6 +69,17 @@
                     android:textColorHint="#7A8089"/>
 
             </com.google.android.material.textfield.TextInputLayout>
+            <Spinner
+                android:id="@+id/cat_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:padding="16dp"
+                android:background="@drawable/default_option_border_bg"
+                android:inputType="textCapWords"
+                android:textColor="#363A43"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                />
             <Button
                 android:id="@+id/btn_start"
                 android:layout_width="match_parent"
