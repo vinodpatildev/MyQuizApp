@@ -69,7 +69,7 @@
             android:padding="15dp"
             android:textColor="#7A8089"
             android:textSize="18sp"
-            android:text="Option 1"
+            android:text=""
             />
         <TextView
             android:id="@+id/tv_option_two"
@@ -81,7 +81,7 @@
             android:padding="15dp"
             android:textColor="#7A8089"
             android:textSize="18sp"
-            android:text="Option 2"
+            android:text=""
             />
         <TextView
             android:id="@+id/tv_option_three"
@@ -93,7 +93,7 @@
             android:padding="15dp"
             android:textColor="#7A8089"
             android:textSize="18sp"
-            android:text="Option 3"
+            android:text=""
             />
         <TextView
             android:id="@+id/tv_option_four"
@@ -105,7 +105,7 @@
             android:padding="15dp"
             android:textColor="#7A8089"
             android:textSize="18sp"
-            android:text="Option 4"
+            android:text=""
             />
 
         <Button

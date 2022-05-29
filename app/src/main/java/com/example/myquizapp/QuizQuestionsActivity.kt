@@ -139,7 +139,7 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun filterString(str: String): String {
-        return str.replace("\"","", true).replace("&quot;","\"", true).replace("&#039;","'", true)
+        return str.replace("\"","", true).replace("&quot;","\"", true).replace("&#039;","'", true).replace("&rsquo;","'", true).replace("&lsquo","'", true)
 
     }
 
