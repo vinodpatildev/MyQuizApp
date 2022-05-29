@@ -20,7 +20,8 @@ object Constants {
 //        )
 //        questionList.add(que1)
 //
-//        val que2 = Question(
+//        val que2 = Quest
+//        ion(
 //            2,
 //            "What country does this flag belong to?",
 //            R.drawable.ic_flag_of_australia,

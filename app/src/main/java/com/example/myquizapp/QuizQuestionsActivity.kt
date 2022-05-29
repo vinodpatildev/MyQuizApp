@@ -82,12 +82,13 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
 
                 for(item in 0..9){
                     val id = item + 1
-                    val questionStatement = (jsonQuestions?.get(item) as JSONObject).getString("question").toString()
+                    var questionStatement = filterString((jsonQuestions?.get(item) as JSONObject).getString("question").toString())
+
                     val correctAnswer = (jsonQuestions?.get(item) as JSONObject).getString("correct_answer").toString()
 
                     var wans = (jsonQuestions?.get(item) as JSONObject).getString("incorrect_answers")
                     wans = wans.substring(1,wans.length-1)
-                    var wrongAnswers = wans.split(",").toTypedArray()
+                    var wrongAnswers = (wans.split(",").toTypedArray()).map{filterString(it)}
 
                     val correctOption = (1..4).random()
 
@@ -130,11 +131,16 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
                 setQuestions()
             },
             { error ->
-                Toast.makeText(this,"success stage 2",Toast.LENGTH_LONG).show()
+                Toast.makeText(this,"--failure--",Toast.LENGTH_LONG).show()
             }
         )
         vQueue?.add(jsonObjectRequest)
         Log.i("Passed ","loadQuestions() :terminate")
+    }
+
+    private fun filterString(str: String): String {
+        return str.replace("\"","", true).replace("&quot;","\"", true).replace("&#039;","'", true)
+
     }
 
     private fun setQuestions() {
