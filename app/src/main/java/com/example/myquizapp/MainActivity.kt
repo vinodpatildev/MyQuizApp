@@ -14,6 +14,7 @@ class MainActivity : AppCompatActivity() {
     private var cat_spinner: Spinner? = null
 
     private var selected_cat :Int = 9
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -45,7 +46,7 @@ class MainActivity : AppCompatActivity() {
         val categories = resources.getStringArray(R.array.categories)
 
         if (cat_spinner != null) {
-            val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, categories)
+            val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, categories)
             cat_spinner?.adapter = adapter
 
             cat_spinner?.onItemSelectedListener = object :

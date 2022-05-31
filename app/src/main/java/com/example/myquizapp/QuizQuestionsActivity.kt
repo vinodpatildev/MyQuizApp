@@ -1,5 +1,6 @@
 package com.example.myquizapp
 
+import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
@@ -9,10 +10,14 @@ import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -36,6 +41,7 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
     private var tvOptionFour: TextView? = null
 
     private var btnSubmit: Button? = null
+    private var customProgressDialog: Dialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,78 +69,89 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
         tvOptionFour?.setOnClickListener(this)
         btnSubmit?.setOnClickListener(this)
 
-        loadQuestions()
+        lifecycleScope.launch{
+            loadQuestions()
+        }
+
     }
 
-    private fun loadQuestions(){
-        Log.i("Passed ","loadQuestions() :initiate")
-        val questionList = ArrayList<Question>()
-
-        val url = "https://opentdb.com/api.php?amount=10&category=$mSelectedCat&difficulty=easy&type=multiple"
-        val jsonObjectRequest = JsonObjectRequest(
-            Request.Method.GET,
-            url,
-            null,
-            { response ->
-                val jsonQuestions : JSONArray? = response.getJSONArray("results")
-
-                for(item in 0..9){
-                    val id = item + 1
-                    var questionStatement = filterString((jsonQuestions?.get(item) as JSONObject).getString("question").toString())
-
-                    val correctAnswer = (jsonQuestions?.get(item) as JSONObject).getString("correct_answer").toString()
-
-                    var wans = (jsonQuestions?.get(item) as JSONObject).getString("incorrect_answers")
-                    wans = wans.substring(1,wans.length-1)
-                    var warr = (wans.split(",").toTypedArray())
-                    var wrongAnswers = warr.map{filterString(it)}
-
-                    val correctOption = (1..4).random()
-
-                    when(correctOption){
-                        1 -> {questionList.add(Question(id,
-                            questionStatement,
-                            correctAnswer,
-                            wrongAnswers[0],
-                            wrongAnswers[1],
-                            wrongAnswers[2],
-                            1
-                        ))}
-                        2 -> {questionList.add(Question(id,
-                            questionStatement,
-                            wrongAnswers[0],
-                            correctAnswer,
-                            wrongAnswers[1],
-                            wrongAnswers[2],
-                            2
-                        ))}
-                        3 -> {questionList.add(Question(id,
-                            questionStatement,
-                            wrongAnswers[0],
-                            wrongAnswers[1],
-                            correctAnswer,
-                            wrongAnswers[2],
-                            3
-                        ))}
-                        4 -> {questionList.add(Question(id,
-                            questionStatement,
-                            wrongAnswers[0],
-                            wrongAnswers[1],
-                            wrongAnswers[2],
-                            correctAnswer,
-                            4
-                        ))}
-                    }
-                }
-                mQuestionList = questionList
-                setQuestions()
-            },
-            { error ->
-                Toast.makeText(this,"--failure--",Toast.LENGTH_LONG).show()
+    private suspend fun loadQuestions(){
+        withContext(Dispatchers.IO){
+            runOnUiThread{
+                showProgressBar()
             }
-        )
-        vQueue?.add(jsonObjectRequest)
+            val questionList = ArrayList<Question>()
+
+            val url = "https://opentdb.com/api.php?amount=10&category=$mSelectedCat&difficulty=easy&type=multiple"
+            val jsonObjectRequest = JsonObjectRequest(
+                Request.Method.GET,
+                url,
+                null,
+                { response ->
+                    val jsonQuestions : JSONArray? = response.getJSONArray("results")
+
+                    for(item in 0..9){
+                        val id = item + 1
+                        var questionStatement = filterString((jsonQuestions?.get(item) as JSONObject).getString("question").toString())
+
+                        val correctAnswer = (jsonQuestions?.get(item) as JSONObject).getString("correct_answer").toString()
+
+                        var wans = (jsonQuestions?.get(item) as JSONObject).getString("incorrect_answers")
+                        wans = wans.substring(1,wans.length-1)
+                        var warr = (wans.split(",").toTypedArray())
+                        var wrongAnswers = warr.map{filterString(it)}
+
+                        val correctOption = (1..4).random()
+
+                        when(correctOption){
+                            1 -> {questionList.add(Question(id,
+                                questionStatement,
+                                correctAnswer,
+                                wrongAnswers[0],
+                                wrongAnswers[1],
+                                wrongAnswers[2],
+                                1
+                            ))}
+                            2 -> {questionList.add(Question(id,
+                                questionStatement,
+                                wrongAnswers[0],
+                                correctAnswer,
+                                wrongAnswers[1],
+                                wrongAnswers[2],
+                                2
+                            ))}
+                            3 -> {questionList.add(Question(id,
+                                questionStatement,
+                                wrongAnswers[0],
+                                wrongAnswers[1],
+                                correctAnswer,
+                                wrongAnswers[2],
+                                3
+                            ))}
+                            4 -> {questionList.add(Question(id,
+                                questionStatement,
+                                wrongAnswers[0],
+                                wrongAnswers[1],
+                                wrongAnswers[2],
+                                correctAnswer,
+                                4
+                            ))}
+                        }
+                    }
+                    mQuestionList = questionList
+                    setQuestions()
+                    runOnUiThread{
+                        dismissProgressBar()
+                    }
+                },
+                { error ->
+
+                }
+            )
+            vQueue?.add(jsonObjectRequest)
+        }
     }
+
     private fun filterString(str: String): String {
         return str.replace("\"","", true).replace("&quot;","\"", true).replace("&#039;","'", true).replace("&rsquo;","'", true).replace("&lsquo","'", true)
 
@@ -277,6 +294,16 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
                     drawbleView
                 )
             }
+        }
+    }
+    private fun showProgressBar(){
+        customProgressDialog = Dialog(this)
+        customProgressDialog?.setContentView(R.layout.custom_progress_bar)
+        customProgressDialog?.show()
+    }
+    private fun dismissProgressBar(){
+        if(customProgressDialog != null){
+            customProgressDialog?.dismiss()
         }
     }
 }
