@@ -63,11 +63,7 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
         tvOptionFour?.setOnClickListener(this)
         btnSubmit?.setOnClickListener(this)
 
-        Log.i("Passed ","stage 1")
         loadQuestions()
-        Log.i("Passed ","stage 2")
-
-//        setQuestions()
     }
 
     private fun loadQuestions(){
@@ -90,7 +86,8 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
 
                     var wans = (jsonQuestions?.get(item) as JSONObject).getString("incorrect_answers")
                     wans = wans.substring(1,wans.length-1)
-                    var wrongAnswers = (wans.split(",").toTypedArray()).map{filterString(it)}
+                    var warr = (wans.split(",").toTypedArray())
+                    var wrongAnswers = warr.map{filterString(it)}
 
                     val correctOption = (1..4).random()
 
@@ -137,14 +134,12 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
             }
         )
         vQueue?.add(jsonObjectRequest)
-        Log.i("Passed ","loadQuestions() :terminate")
     }
     private fun filterString(str: String): String {
         return str.replace("\"","", true).replace("&quot;","\"", true).replace("&#039;","'", true).replace("&rsquo;","'", true).replace("&lsquo","'", true)
 
     }
     private fun setQuestions() {
-        Log.i("Passed ","setQuestions() :initiate")
         setDefaultOptionsView()
         val que: Question = mQuestionList!![mCurrentPosition - 1]
         progressBar?.progress = mCurrentPosition
@@ -162,10 +157,8 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
         }else{
             btnSubmit?.text = "SUBMIT"
         }
-        Log.i("Passed ","setQuestions() :terminate")
     }
     fun setDefaultOptionsView(){
-        Log.i("Passed ","setDefaultOptions() :initiate")
         val options = ArrayList<TextView>()
         tvOptionOne?.let{
             options.add(0,it)
@@ -187,10 +180,8 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
                 R.drawable.default_option_border_bg
             )
         }
-        Log.i("Passed ","setDefaultOptionsView() :terminate")
     }
     fun selectedOptionView(tv:TextView, selectedOptionNum: Int){
-        Log.i("Passed ","selectedOptionView()")
         setDefaultOptionsView()
 
         mSelectedOption = selectedOptionNum
@@ -203,11 +194,9 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
         )
     }
     override fun onClick(view: View?) {
-        Log.i("Passed ","onClick()")
         when(view?.id){
             R.id.tv_option_one -> {
                 tvOptionOne?.let{
-                    Log.i("Passed ","tvOptionOne")
                     selectedOptionView(it,1)
                 }
             }
